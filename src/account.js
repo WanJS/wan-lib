@@ -16,7 +16,7 @@ const toChecksum = address => {
   const addressHash = keccak256s(address.slice(2));
   let checksumAddress = "0x";
   for (let i = 0; i < 40; i++)
-    checksumAddress += parseInt(addressHash[i + 2], 16) > 7
+    checksumAddress += parseInt(addressHash[i + 2], 16) <= 7
       ? address[i + 2].toUpperCase()
       : address[i + 2];
   return checksumAddress;
@@ -37,7 +37,7 @@ const fromPrivate = privateKey => {
 const encodeSignature = ([v, r, s]) =>
   Bytes.flatten([r,s,v]);
 
-const decodeSignature = (hex) => [ 
+const decodeSignature = (hex) => [
   Bytes.slice(64, Bytes.length(hex), hex),
   Bytes.slice(0, 32, hex),
   Bytes.slice(32, 64, hex)];
@@ -64,7 +64,7 @@ const recover = (hash, signature) => {
   return address;
 }
 
-module.exports = { 
+module.exports = {
   create,
   toChecksum,
   fromPrivate,

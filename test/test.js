@@ -2,13 +2,13 @@ const assert = require("assert");
 const rnd = require("./lib/randomData.js");
 const rlp = require("./../src/rlp.js");
 const ref = {rlp: require("rlp")};
-// const F = require("./../src/types.js");
+const F = require("./../lib/types.js");
 const Nat = require("./../src/Nat.js");
 const Account = require("./../src/account.js");
 const keccak256 = require("./../src/hash.js").keccak256;
 const ethjs = {
-  signer: require("ethjs-signer"),
-  account: require("ethjs-account")};
+  signer: require("wanjs-signer"),
+  account: require("wanjs-account")};
 
 describe("RLP", () => {
   it("Must operate identically to reference implementation", () => {
@@ -112,7 +112,7 @@ describe("account", function () {
 
         // Checks if the signature is as expected
         assert(transaction.signature === signature);
-        
+
         //// Checks if we can recover the right address
         const recoveredAddress = Account.recoverTransaction(signature);
         assert(recoveredAddress === testAccount.address);
@@ -123,13 +123,13 @@ describe("account", function () {
           let txObj = {};
           for (let key in transaction.object)
             txObj[key] = transaction.object[key].replace(/^0x$/,"0x0");
-          
+
           //Signs it, using pre-EIP 155 scheme (using the ethjs-signer lib)
           const oldSignature = ethjs.signer.sign(txObj, correctAccount.privateKey);
 
           //// Checks if the signature is as expected
           assert(transaction.oldSignature === oldSignature);
-          
+
           //// Checks if we can recover the right address from old sigs (using web3)
           const recoveredAddress = Account.recoverTransaction(oldSignature);
           assert(recoveredAddress === testAccount.address);
